@@ -1,8 +1,8 @@
 import React from 'react';
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import Jumbotron from "react-bootstrap/Jumbotron";
 import CardDeck from "react-bootstrap/CardDeck";
+import { withCookies } from 'react-cookie';
 
 class BooksComponent extends React.Component {
     constructor(props) {
@@ -15,6 +15,9 @@ class BooksComponent extends React.Component {
     }
 
     componentDidMount() {
+        //let authToken = Cookies.get("authToken");
+        let headerObj = {'x-auth-token': "authToken"};
+
         fetch("http://sf5.api.local.wip:8000/books")
             .then(res => res.json())
             .then(
@@ -62,4 +65,4 @@ class BooksComponent extends React.Component {
     }
 }
 
-export default BooksComponent;
+export default withCookies(BooksComponent);
