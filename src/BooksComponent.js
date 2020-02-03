@@ -1,4 +1,8 @@
 import React from 'react';
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import Jumbotron from "react-bootstrap/Jumbotron";
+import CardDeck from "react-bootstrap/CardDeck";
 
 class BooksComponent extends React.Component {
     constructor(props) {
@@ -37,13 +41,22 @@ class BooksComponent extends React.Component {
             return <div>Chargement…</div>;
         } else {
             return (
-                <ul>
-                    {items.map(item => (
-                        <li key={item.ISBN}>
-                            {item.title} {item.author}
-                        </li>
-                    ))}
-                </ul>
+                    <CardDeck>
+                { items.map((item) => (
+                    <Card style={{ width: '18rem' }} key={item.isbn}>
+                        <Card.Body>
+                            <Card.Title>{item.author}</Card.Title>
+                            <Card.Text>
+                                {item.title}
+                            </Card.Text>
+                            <Button variant="primary">See details</Button>
+                        </Card.Body>
+                        <Card.Footer>
+                            <small className="text-muted">New !</small>
+                        </Card.Footer>
+                    </Card>
+                ))}
+                    </CardDeck>
             );
         }
     }

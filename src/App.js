@@ -1,15 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Container from 'react-bootstrap/Container';
+
 import './App.css';
+import BooksComponent from "./BooksComponent";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+          <Container className="p-3">
+            <Jumbotron>
+                <h1>BookSwap : swap locally your books</h1>
+            </Jumbotron>
 
-      </header>
-    </div>
+            <BooksComponent />
+        </Container>
   );
 }
 
