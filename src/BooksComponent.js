@@ -2,7 +2,6 @@ import React from 'react';
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import CardDeck from "react-bootstrap/CardDeck";
-import { withCookies } from 'react-cookie';
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Container from "react-bootstrap/Container";
@@ -13,33 +12,64 @@ class BooksComponent extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            items: []
+            items: [],
+            search:'',
         };
+
+        this._books = this._books.bind(this);
+        this._setSearch = this._setSearch.bind(this);
     }
 
+
     componentDidMount() {
-        fetch("http://sf5.api.local.wip:8000/api/books", {
+        this._books(this.state.search)
+    }
+
+    componentWillUnmount() {
+        if (this._books) {
+            this._books.cancel();
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.state.search !== prevState.search) {
+            this._books();
+        }
+    }
+
+    _books() {
+
+        fetch("http://sf5.api.local.wip:8000/api/books?search="+this.state.search, {
             headers: { 'X-AUTH-TOKEN': "_apiTokenXYZ_@321" }
         })
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        items: result.books
-                    });
+                        this.setState({
+                            isLoaded: true,
+                            items: result.books
+                        });
                 },
                 (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
+                        this.setState({
+                            isLoaded: true,
+                            error
+                        });
                 }
             )
     }
 
+    _setSearch(e) {
+        let search = e.target.value;
+
+        this.setState(((state, props) => { return {
+            search: search
+        }}));
+    }
+
     render() {
-        const { error, isLoaded, items } = this.state;
+        const { error, isLoaded, items, search } = this.state;
+
         if (error) {
             return <div>Erreur : {error.message}</div>;
         } else if (!isLoaded) {
@@ -49,8 +79,7 @@ class BooksComponent extends React.Component {
                 <Container>
 
                     <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                        <Button variant="outline-success">Search</Button>
+                        <FormControl name="search" type="text" placeholder="Search" className="mr-sm-2" value={this.state.search} onChange={this._setSearch}/>
                     </Form>
 
                     <CardDeck>
@@ -77,4 +106,4 @@ class BooksComponent extends React.Component {
     }
 }
 
-export default withCookies(BooksComponent);
+export default BooksComponent;
