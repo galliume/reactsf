@@ -5,30 +5,34 @@ import CardDeck from "react-bootstrap/CardDeck";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Container from "react-bootstrap/Container";
+import { withCookies, Cookies } from 'react-cookie';
+import {instanceOf} from "prop-types";
 
 class BooksComponent extends React.Component {
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+    };
     constructor(props) {
         super(props);
+        const { cookies } = props;
+
         this.state = {
             error: null,
             isLoaded: false,
             items: [],
             search:'',
+            apiToken: cookies.get('apiToken')
         };
 
         this._books = this._books.bind(this);
         this._setSearch = this._setSearch.bind(this);
     }
 
-
     componentDidMount() {
         this._books(this.state.search)
     }
 
     componentWillUnmount() {
-        if (this._books) {
-            this._books.cancel();
-        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -40,7 +44,7 @@ class BooksComponent extends React.Component {
     _books() {
 
         fetch("http://sf5.api.local.wip:8000/api/books?search="+this.state.search, {
-            headers: { 'X-AUTH-TOKEN': "_apiTokenXYZ_@321" }
+            headers: { 'X-AUTH-TOKEN':this.state.apiToken }
         })
             .then(res => res.json())
             .then(
@@ -68,7 +72,7 @@ class BooksComponent extends React.Component {
     }
 
     render() {
-        const { error, isLoaded, items, search } = this.state;
+        const { error, isLoaded, items } = this.state;
 
         if (error) {
             return <div>Erreur : {error.message}</div>;
@@ -106,4 +110,4 @@ class BooksComponent extends React.Component {
     }
 }
 
-export default BooksComponent;
+export default withCookies(BooksComponent);
