@@ -62,14 +62,17 @@ class LoginComponent extends React.Component {
             .then(
                 (result) => {
                     const { cookies } = this.props;
-                    cookies.set('apiToken',  result.user.apiToken, { path: '/' })
 
                     this.setState({
                         isLoaded: true,
                         user: result.user,
                     });
 
-                    this.props.history.push('/');
+                    if (null === result.user.error && null !== result.user.apiToken) {
+                        cookies.set('apiToken', result.user.apiToken, {path: '/'})
+                        cookies.set('userName', result.user.username, {path: '/'})
+                        this.props.history.push('/');
+                    }
                 },
                 (error) => {
                     this.setState({
@@ -81,7 +84,7 @@ class LoginComponent extends React.Component {
     }
 
     render() {
-        const { error, isLoaded, user } = this.state;
+        const { user } = this.state;
 
             let alert;
             if (user.error) {

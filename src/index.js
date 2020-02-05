@@ -9,12 +9,14 @@ import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from 'react-cookie';
 import App from "./App";
 import LoginComponent from "./LoginComponent";
+import LogoutComponent from "./LogoutComponent";
 
 const routing = (
     <Router>
             <div>
                 <Route exact={true} path="/" component={App} />
                 <Route path="/login" component={LoginComponent} />
+                <Route path="/logout" component={LogoutComponent} />
             </div>
     </Router>
 )
