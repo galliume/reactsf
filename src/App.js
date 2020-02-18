@@ -41,7 +41,7 @@ class App extends React.Component {
             <Container className="p-3">
                 { navBarComponent }
                 <Jumbotron>
-                    <h1>BookSwap : swap locally your books</h1>
+                    <h1>BookSwap : swap your books locally</h1>
                 </Jumbotron>
                 { bookComponent }
             </Container>
